@@ -15,9 +15,9 @@ const drinkFrameCaptions=[
  ['倒入指定的光泉鮮乳。','用不鏽鋼杯量取150 ml。','將量好的牛奶移到紙杯上方。','倒入已有珍珠的紙杯。'],
  ['從茶桶接取紅茶。','紅茶液面到紅色線上緣；先不加冰塊。','先蓋上大杯蓋。','再蓋上小杯蓋。'],
  ['右手拇指壓小杯蓋，左手托杯底。','小杯蓋朝向自己、杯底朝上，傾斜約45度。','向斜前方來回雪克。','握法請配合現場老師示範；此時不加冰塊。'],
- ['只打開小杯蓋，大杯蓋留在杯身上。','紅茶倒進已有珍珠與牛奶的紙杯。','再加入冰塊。','蓋上透明杯蓋，完成！']
+ ['只打開小杯蓋，大杯蓋留在杯身上。','將雪克杯開口對準紙杯，準備倒入。','傾斜雪克杯，紅茶從開口流進紙杯。','將紅茶倒入已有珍珠與150 ml牛奶的紙杯。','完成倒入，再進行下一個動作。','再加入冰塊。','蓋上透明杯蓋，完成！']
 ];
-function drinkArt(i){return '<div class="drink-manga" role="img" aria-label="'+drinkLessons[i].title+'漫畫動畫">'+[0,1,2,3].map(n=>'<div class="drink-manga-frame" data-scene="'+n+'" style="background-image:url(assets/drink-manga-'+(i+1)+'.webp);background-position:'+(n%2?'100%':'0%')+' '+(n>=2?'100%':'0%')+'"></div>').join('')+'</div>';}
+function drinkArt(i){const frames=i===6?[['drink-manga-7',0],['drink-pour',0],['drink-pour',1],['drink-pour',2],['drink-pour',3],['drink-manga-7',2],['drink-manga-7',3]]:[0,1,2,3].map(n=>['drink-manga-'+(i+1),n]);return '<div class="drink-manga" role="img" aria-label="'+drinkLessons[i].title+'漫畫動畫">'+frames.map(([asset,cell],n)=>'<div class="drink-manga-frame" data-scene="'+n+'" style="background-image:url(assets/'+asset+'.webp);background-position:'+(cell%2?'100%':'0%')+' '+(cell>=2?'100%':'0%')+'"></div>').join('')+'</div>';}
 function renderDrink(){
 const intro=e('div',undefined,'drink-intro');intro.append(e('div','現場動手做・主持人掌握節奏','tag'),e('h1','換我們調製一杯！'),e('p','一個動作、一次示範。往下捲動，配合現場老師一起操作。'));app.append(intro);
 drinkLessons.forEach((lesson,i)=>{
@@ -27,12 +27,12 @@ drinkLessons.forEach((lesson,i)=>{
  const caption=e('div',lesson.captions[0],'drink-caption');caption.setAttribute('aria-live','polite');
  const controls=e('div',undefined,'drink-controls'),status=e('span','等待示範','drink-status');status.setAttribute('aria-live','polite');let animations=[],playing=false,started=false,token=0;
  function reset(){token++;animations.forEach(a=>a.cancel());animations=[];playing=false;started=false;caption.textContent=lesson.captions[0];status.textContent='等待示範';play.textContent='▶ 播放示範';}
- function start(){started=true;playing=true;play.textContent='Ⅱ 暫停示範';status.textContent='示範中';const scenes=[...demo.querySelectorAll('[data-scene]')],span=i===5?2250:3200,total=scenes.length*span,currentToken=++token;
- const sequence=i===5?Array.from({length:20},(_,n)=>n%4):[0,1,2,3];
- scenes.forEach((node,n)=>{const frames=sequence.map((f,k)=>({opacity:f===n?1:0,offset:k/sequence.length,easing:'steps(1,end)'}));frames.push({opacity:n===3?1:0,offset:1});animations.push(node.animate(frames,{duration:total,fill:'forwards'}));});
+ function start(){started=true;playing=true;play.textContent='Ⅱ 暫停示範';status.textContent='示範中';const scenes=[...demo.querySelectorAll('[data-scene]')],span=i===5?2250:i===6?2000:3200,total=scenes.length*span,currentToken=++token;
+ const sequence=i===5?Array.from({length:20},(_,n)=>n%4):scenes.map((_,n)=>n);
+ scenes.forEach((node,n)=>{const frames=sequence.map((f,k)=>({opacity:f===n?1:0,offset:k/sequence.length,easing:'steps(1,end)'}));frames.push({opacity:n===scenes.length-1?1:0,offset:1});animations.push(node.animate(frames,{duration:total,fill:'forwards'}));});
  const tracker=demo.animate([{opacity:1},{opacity:1}],{duration:total});animations.push(tracker);
- const update=()=>{if(currentToken!==token||!section.isConnected)return;const t=tracker.currentTime||0;caption.textContent=drinkFrameCaptions[i][Math.min(3,Math.floor(t/span))];if(tracker.playState==='running'||tracker.playState==='paused')requestAnimationFrame(update)};requestAnimationFrame(update);
- tracker.finished.then(()=>{if(currentToken!==token)return;playing=false;caption.textContent=drinkFrameCaptions[i][3];status.textContent='示範完成';play.textContent='▶ 再看一次';}).catch(()=>{});
+ const update=()=>{if(currentToken!==token||!section.isConnected)return;const t=tracker.currentTime||0;caption.textContent=drinkFrameCaptions[i][Math.min(drinkFrameCaptions[i].length-1,Math.floor(t/span))];if(tracker.playState==='running'||tracker.playState==='paused')requestAnimationFrame(update)};requestAnimationFrame(update);
+ tracker.finished.then(()=>{if(currentToken!==token)return;playing=false;caption.textContent=drinkFrameCaptions[i].at(-1);status.textContent='示範完成';play.textContent='▶ 再看一次';}).catch(()=>{});
  }
  const play=b('▶ 播放示範',()=>{if(!started){start();return}if(playing){animations.forEach(a=>a.pause());playing=false;play.textContent='▶ 繼續示範';status.textContent='已暫停'}else if(animations.at(-1)?.playState==='finished'){reset();start()}else{animations.forEach(a=>a.play());playing=true;play.textContent='Ⅱ 暫停示範';status.textContent='示範中'}},'yellow');
  controls.append(play,b('↺ 重播',()=>{reset();start()},'light'),status);
