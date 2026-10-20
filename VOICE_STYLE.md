@@ -21,3 +21,5 @@
 第二輪：使用者認為第一輪太成熟，新增voice-cute.html。以原始不同聲線做卡通化音高／語速處理：A speaker0 pitch1.24 tempo.87；B speaker3 pitch1.16 tempo.89；C speaker5 pitch1.32 tempo.84。非特定卡通人物模仿。音檔為assets/voice/cute-*.mp3，仍待使用者挑選。
 
 第三輪：使用者選C但覺得太尖，製作C圓潤版（尚待確認）：speaker5，pitch1.20，tempo.90，350Hz +2dB、3200Hz -3dB、6500Hz低通；相同配樂。檔案cute-c-round*.mp3，頁面voice-c-round.html。
+
+第四輪：使用者希望背景音樂更活潑、快樂。保留C圓潤人聲，新增原創132 BPM大調跳躍旋律、彈跳低音、反拍撥弦和輕打擊樂；配樂檔music-happy.mp3，混音cute-c-round-happy.mp3，使用側鏈在人聲時輕壓配樂音量。voice-c-round.html更新為此版，仍待確認與套入完整示範。
