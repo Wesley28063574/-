@@ -25,23 +25,28 @@ function renderDrink(){
  const player=e('section',undefined,'drink-lesson drink-film');player.setAttribute('aria-label','飲品實作連續播放器');
  const heading=e('div',undefined,'drink-heading'),badge=e('span','01 / 07','drink-badge'),title=e('h2');heading.append(badge,title);
  const demo=e('div',undefined,'drink-demo'),caption=e('div',undefined,'drink-caption'),warning=e('p',undefined,'drink-warning');caption.setAttribute('aria-live','polite');
+ const surfaceHint=e('span','▶','drink-surface-play');surfaceHint.setAttribute('aria-hidden','true');demo.tabIndex=0;demo.setAttribute('role','button');
  const transport=e('div',undefined,'drink-transport'),controls=e('div',undefined,'drink-controls'),status=e('span','等待播放','drink-status');status.setAttribute('aria-live','polite');
  const range=e('input');range.type='range';range.min=0;range.max=total;range.step=100;range.value=0;range.setAttribute('aria-label','播放進度');
  const clock=e('span',undefined,'drink-film-clock'),speed=e('select');speed.setAttribute('aria-label','播放速度');[.75,1,1.25].forEach(v=>{const option=e('option',v+'倍速');option.value=v;option.selected=v===1;speed.append(option)});
  const setText=(node,text)=>{if(node.textContent!==text)node.textContent=text};
  const time=ms=>Math.floor(ms/60000)+':'+String(Math.floor(ms/1000)%60).padStart(2,'0');
  function paint(){if(!player.isConnected)return;const i=elapsed>=total?6:starts.findIndex((start,n)=>elapsed>=start&&elapsed<start+durations[n]),local=Math.max(0,Math.min(durations[i]-.01,elapsed-starts[i]));
-  if(i!==current){current=i;lastFrame=-1;title.textContent=drinkLessons[i].title;badge.textContent=String(i+1).padStart(2,'0')+' / 07';demo.innerHTML=drinkArt(i);warning.textContent=drinkLessons[i].warning||'';warning.hidden=!drinkLessons[i].warning;const image=new Image;image.onload=()=>{if(player.isConnected&&current===i)demo.querySelector('.drink-manga').style.aspectRatio=image.naturalWidth+'/'+image.naturalHeight};image.src='assets/drink-manga-'+(i+1)+'.webp';}
+  if(i!==current){current=i;lastFrame=-1;title.textContent=drinkLessons[i].title;badge.textContent=String(i+1).padStart(2,'0')+' / 07';demo.innerHTML=drinkArt(i);demo.append(surfaceHint);warning.textContent=drinkLessons[i].warning||'';warning.hidden=!drinkLessons[i].warning;const image=new Image;image.onload=()=>{if(player.isConnected&&current===i)demo.querySelector('.drink-manga').style.aspectRatio=image.naturalWidth+'/'+image.naturalHeight};image.src='assets/drink-manga-'+(i+1)+'.webp';}
   const frame=i===5?Math.floor(local/(durations[i]/20))%4:Math.floor(local/spans[i]);if(frame!==lastFrame){demo.querySelectorAll('[data-scene]').forEach((node,n)=>node.style.opacity=n===frame?'1':'0');lastFrame=frame;}
   const text=drinkFrameCaptions[i][Math.min(drinkFrameCaptions[i].length-1,Math.floor(local/spans[i]))];if(caption.textContent!==text)caption.textContent=text;
+  demo.classList.toggle('is-playing',playing);demo.classList.toggle('is-loading',loading);demo.setAttribute('aria-label',loading?'圖片載入中':playing?'暫停飲品示範':elapsed>=total?'重播飲品示範':elapsed?'繼續飲品示範':'播放飲品示範');surfaceHint.textContent=loading?'…':playing?'Ⅱ':'▶';
   range.value=elapsed;setText(clock,time(elapsed)+' / '+time(total));setText(play,playing?'Ⅱ 暫停播放':elapsed>=total?'▶ 再看一次':elapsed?'▶ 繼續播放':'▶ 開始完整示範');setText(status,loading?'圖片載入中…':elapsed>=total?'七個步驟播放完成':playing?'連續播放中':elapsed?'已暫停':'等待播放');
  }
  function pause(){playing=false;cancelAnimationFrame(raf);paint()}
  function tick(now){if(!playing||!player.isConnected)return;elapsed=Math.min(total,elapsed+(now-lastTime)*Number(speed.value));lastTime=now;if(elapsed>=total)playing=false;paint();if(playing)raf=requestAnimationFrame(tick)}
- async function begin(){if(loading)return;if(!ready){loading=true;const token=++loadToken;play.disabled=true;paint();try{await Promise.all([...Array.from({length:7},(_,i)=>'drink-manga-'+(i+1)), 'drink-pour'].map(async name=>{const image=new Image;image.src='assets/'+name+'.webp';await image.decode()}));if(token!==loadToken||!player.isConnected)return;ready=true;}catch{if(player.isConnected){loading=false;play.disabled=false;status.textContent='圖片載入失敗，請按開始重試。'}return}loading=false;play.disabled=false;}
+ async function begin(){if(loading)return;if(!ready){loading=true;const token=++loadToken;play.disabled=true;paint();try{await new Promise((resolve,reject)=>{const image=new Image;const timeout=setTimeout(()=>reject(new Error('image timeout')),12000);image.onload=()=>{clearTimeout(timeout);resolve()};image.onerror=()=>{clearTimeout(timeout);reject(new Error('image unavailable'))};image.src='assets/drink-manga-'+(current+1)+'.webp'});if(token!==loadToken||!player.isConnected)return;ready=true;}catch{if(player.isConnected){loading=false;play.disabled=false;status.textContent='圖片載入失敗，請按開始重試。'}return}loading=false;play.disabled=false;}
   if(elapsed>=total)elapsed=0;playing=true;lastTime=performance.now();paint();raf=requestAnimationFrame(tick);
  }
- const play=b('▶ 開始完整示範',()=>playing?pause():begin(),'yellow');
+ const toggle=()=>{if(loading)return;playing?pause():begin()};
+ const play=b('▶ 開始完整示範',toggle,'yellow');demo.onclick=toggle;demo.onkeydown=event=>{if(event.key===' '||event.key==='Enter'){event.preventDefault();toggle()}};
+ // Fetch later scenes without blocking the first play action.
+ for(const name of [...Array.from({length:7},(_,i)=>'drink-manga-'+(i+1)),'drink-pour']){const preload=new Image;preload.src='assets/'+name+'.webp';}
  controls.append(play,b('↺ 從頭重播',()=>{pause();elapsed=0;paint();begin()},'light'),b('上一段',()=>{pause();elapsed=starts[Math.max(0,current-1)];paint()},'light'),b('下一段',()=>{pause();elapsed=current<6?starts[current+1]:total;paint()},'light'),speed,status);
  range.oninput=()=>{elapsed=Number(range.value);lastTime=performance.now();paint()};speed.onchange=()=>{lastTime=performance.now()};transport.append(range,clock);
  player.append(heading,demo,caption,warning,transport,controls);app.append(player);paint();
