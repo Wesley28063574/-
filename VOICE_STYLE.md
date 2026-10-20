@@ -23,3 +23,7 @@
 第三輪：使用者選C但覺得太尖，製作C圓潤版（尚待確認）：speaker5，pitch1.20，tempo.90，350Hz +2dB、3200Hz -3dB、6500Hz低通；相同配樂。檔案cute-c-round*.mp3，頁面voice-c-round.html。
 
 第四輪：使用者希望背景音樂更活潑、快樂。保留C圓潤人聲，新增原創132 BPM大調跳躍旋律、彈跳低音、反拍撥弦和輕打擊樂；配樂檔music-happy.mp3，混音cute-c-round-happy.mp3，使用側鏈在人聲時輕壓配樂音量。voice-c-round.html更新為此版，仍待確認與套入完整示範。
+
+正式套用：使用者確認直接更新，採用C圓潤旁白＋132 BPM快樂配樂，完整七步驟共31段旁白。assets/drink-timeline.js記錄每句實際起迄時間；drink-full-happy.mp3為主混音，drink-narration.mp3為純旁白。播放器以音訊currentTime為唯一時鐘，支援播放／暫停／重播／跳轉／調速／靜音，離開頁面會停止聲音。
+
+重製腳本scripts/build-drink-audio.py，使用sherpa-onnx 1.13.8、soundfile、numpy、ffmpeg與Node；模型目錄由LANSTAR_TTS_MODEL指定，預設/tmp/vits-zh-hf-fanchen-C。
