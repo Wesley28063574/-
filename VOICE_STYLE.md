@@ -19,3 +19,5 @@
 無人聲音樂底檔：assets/voice/music-bed.mp3，可供選定聲線後製作完整示範時沿用。
 
 第二輪：使用者認為第一輪太成熟，新增voice-cute.html。以原始不同聲線做卡通化音高／語速處理：A speaker0 pitch1.24 tempo.87；B speaker3 pitch1.16 tempo.89；C speaker5 pitch1.32 tempo.84。非特定卡通人物模仿。音檔為assets/voice/cute-*.mp3，仍待使用者挑選。
+
+第三輪：使用者選C但覺得太尖，製作C圓潤版（尚待確認）：speaker5，pitch1.20，tempo.90，350Hz +2dB、3200Hz -3dB、6500Hz低通；相同配樂。檔案cute-c-round*.mp3，頁面voice-c-round.html。
