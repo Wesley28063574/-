@@ -17,3 +17,5 @@
 若使用者選定音色，才將完整七步驟台詞重新生成，並依人聲時長安排畫格，不能把此段試聽台詞重複播放充當完整教學。
 
 無人聲音樂底檔：assets/voice/music-bed.mp3，可供選定聲線後製作完整示範時沿用。
+
+第二輪：使用者認為第一輪太成熟，新增voice-cute.html。以原始不同聲線做卡通化音高／語速處理：A speaker0 pitch1.24 tempo.87；B speaker3 pitch1.16 tempo.89；C speaker5 pitch1.32 tempo.84。非特定卡通人物模仿。音檔為assets/voice/cute-*.mp3，仍待使用者挑選。

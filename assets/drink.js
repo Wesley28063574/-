@@ -21,7 +21,7 @@ function drinkArt(i){const frames=i===6?[['drink-manga-7',0],['drink-pour',0],['
 function renderDrink(){
  const spans=drinkLessons.map((_,i)=>i===5?2250:i===6?1800:2400),durations=spans.map((n,i)=>n*drinkFrameCaptions[i].length),starts=durations.map((_,i)=>durations.slice(0,i).reduce((a,b)=>a+b,0)),total=durations.reduce((a,b)=>a+b,0);
  let elapsed=0,playing=false,ready=false,loading=false,lastTime=0,current=-1,lastFrame=-1,raf=0,loadToken=0;
- const intro=e('div',undefined,'drink-intro');intro.append(e('div','珍珠紅茶拿鐵・完整漫畫示範','tag'),e('h1','按一次，跟著嵐星一起做！'),e('p','七個步驟依序自動播放，現場操作時可隨時暫停。'));const audition=e('a','試聽三種嵐星配音 →','drink-audition-link');audition.href='voice-audition.html';audition.target='_blank';audition.rel='noopener';intro.append(audition);app.append(intro);
+ const intro=e('div',undefined,'drink-intro');intro.append(e('div','珍珠紅茶拿鐵・完整漫畫示範','tag'),e('h1','按一次，跟著嵐星一起做！'),e('p','七個步驟依序自動播放，現場操作時可隨時暫停。'));const audition=e('a','試聽三種嵐星配音 →','drink-audition-link');audition.href='voice-cute.html';audition.target='_blank';audition.rel='noopener';intro.append(audition);app.append(intro);
  const player=e('section',undefined,'drink-lesson drink-film');player.setAttribute('aria-label','飲品實作連續播放器');
  const heading=e('div',undefined,'drink-heading'),badge=e('span','01 / 07','drink-badge'),title=e('h2');heading.append(badge,title);
  const demo=e('div',undefined,'drink-demo'),caption=e('div',undefined,'drink-caption'),warning=e('p',undefined,'drink-warning');caption.setAttribute('aria-live','polite');
