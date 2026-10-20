@@ -10,3 +10,8 @@ body[data-phase=drink] main{max-width:1500px;margin:auto;padding:0 24px}body[dat
 
 /* Keep the demonstration unobstructed after its first play. */
 .drink-demo.has-started .drink-surface-play,.drink-demo.has-started.is-playing:hover .drink-surface-play,.drink-demo.has-started.is-playing:focus-visible .drink-surface-play{display:none;opacity:0}
+
+.drink-film-cell[hidden]{display:none}.drink-film .drink-manga-frame{transition:opacity .16s linear;will-change:opacity}@media(prefers-reduced-motion:reduce){.drink-film .drink-manga-frame{transition:none}}
+.drink-film .drink-demo{flex:0 0 auto}.drink-film-cell{width:100%}
+
+.drink-audition-link{display:inline-block;padding:10px 20px;background:#1456a2;color:#fff;border-radius:12px;text-decoration:none;font-size:20px;font-weight:bold;margin:8px}

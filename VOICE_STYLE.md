@@ -1,0 +1,17 @@
+# 嵐星配音試聽草案
+
+目前三版僅供選擇，尚未套用到完整七步驟示範。
+
+共同台詞：嗨，大家好！我是嵐星！今天，我們要一起做珍珠紅茶拿鐵。準備好了嗎？拿起紙杯，加入兩湯匙珍珠，再量一百五十毫升牛奶。一起動手吧！
+
+三種合成聲線取自本機語音模型 vits-zh-hf-fanchen-C，使用 sherpa-onnx 1.13.8，speaker ID 分別為0、3、5，speed=1.08。配音方向：A明亮小精靈、B軟萌小夥伴、C元氣小隊長。人物聲線名稱為本專案草案標籤，非配音員姓名。
+
+來源模型：https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-zh-hf-fanchen-C.tar.bz2
+
+模型下載校驗為發布檔案MD5（base64）：JinsgZfU0sVg4lllF6GYgA==。
+
+輸出：assets/voice/voice-{a,b,c}.mp3為配樂版，voice-{a,b,c}-clean.mp3為純人聲。頁面voice-audition.html可直接播放比較，每次只播放一個音檔。
+
+音樂為本次自行編排的112 BPM短旋律：柔和撥弦音色、小節低音與輕節奏；三版使用同一個音樂素材，混音時人聲優先。未取用商業歌曲。
+
+若使用者選定音色，才將完整七步驟台詞重新生成，並依人聲時長安排畫格，不能把此段試聽台詞重複播放充當完整教學。
