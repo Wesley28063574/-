@@ -7,3 +7,6 @@ body[data-phase=drink] main{max-width:1500px;margin:auto;padding:0 24px}body[dat
 
 /* Tap the artwork itself to play/pause, like a video player. */
 .drink-film .drink-demo{cursor:pointer;touch-action:manipulation;isolation:isolate}.drink-film .drink-demo:focus-visible{outline:5px solid #ffd900;outline-offset:-5px}.drink-surface-play{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:100px;height:76px;border-radius:20px;background:#082b65de;color:white;display:grid;place-items:center;font-size:45px;line-height:1;box-shadow:0 4px 20px #0004;pointer-events:none;transition:opacity .18s}.drink-demo.is-playing .drink-surface-play{opacity:0}.drink-demo.is-playing:hover .drink-surface-play,.drink-demo.is-playing:focus-visible .drink-surface-play{opacity:.7}.drink-demo.is-loading .drink-surface-play{opacity:1;cursor:wait}@media(max-width:650px){.drink-surface-play{width:76px;height:58px;font-size:34px}}
+
+/* Keep the demonstration unobstructed after its first play. */
+.drink-demo.has-started .drink-surface-play,.drink-demo.has-started.is-playing:hover .drink-surface-play,.drink-demo.has-started.is-playing:focus-visible .drink-surface-play{display:none;opacity:0}
