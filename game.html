@@ -135,10 +135,10 @@ if(phase==='finish'){app.append(e('div','全店打烊・夥伴集合','closing-k
 
 
 let revealStep=0;
-let stageOpen=false,stageLabel='一起討論',audioCtx=null,master=null,musicLoop=null,beat=0,muted=false,volume=.6;
+let stageOpen=false,stageLabel='一起討論',audioCtx=null,master=null,musicLoop=null,beat=0,muted=false,volume=.8;
 function tone(freq,length,kind='sine',level=.18){if(!audioCtx||!master)return;const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),t=audioCtx.currentTime;osc.type=kind;osc.frequency.setValueAtTime(freq,t);if(kind==='sine'&&freq<200)osc.frequency.exponentialRampToValueAtTime(42,t+length);gain.gain.setValueAtTime(level,t);gain.gain.exponentialRampToValueAtTime(.001,t+length);osc.connect(gain);gain.connect(master);osc.start(t);osc.stop(t+length)}
 // Boost the quiet synthesized arrangement, then control peaks before output.
-function connectCountdownOutput(context,input){const boost=context.createGain(),compressor=context.createDynamicsCompressor(),ceiling=context.createWaveShaper();boost.gain.value=4;compressor.threshold.value=-6;compressor.knee.value=4;compressor.ratio.value=16;compressor.attack.value=.003;compressor.release.value=.15;const curve=new Float32Array(2048);for(let i=0;i<curve.length;i++){const x=i/(curve.length-1)*2-1;curve[i]=.96*Math.tanh(x/.96)}ceiling.curve=curve;ceiling.oversample='2x';input.connect(boost);boost.connect(compressor);compressor.connect(ceiling);ceiling.connect(context.destination)}
+function connectCountdownOutput(context,input){const boost=context.createGain(),compressor=context.createDynamicsCompressor(),ceiling=context.createWaveShaper();boost.gain.value=24;compressor.threshold.value=-1;compressor.knee.value=2;compressor.ratio.value=8;compressor.attack.value=.003;compressor.release.value=.15;const curve=new Float32Array(2048);for(let i=0;i<curve.length;i++){const x=i/(curve.length-1)*2-1;curve[i]=.96*Math.tanh(x/.96)}ceiling.curve=curve;ceiling.oversample='2x';input.connect(boost);boost.connect(compressor);compressor.connect(ceiling);ceiling.connect(context.destination)}
 function startMusic(){try{if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();master=audioCtx.createGain();connectCountdownOutput(audioCtx,master)}audioCtx.resume().catch(()=>{});master.gain.value=muted?0:volume;if(musicLoop)return;beat=0;musicBeat()}catch{}}
 // Bright major-key melody, bouncing bass and percussion. Only the last ten seconds accelerate.
 function musicBeat(){const fast=seconds>0&&seconds<=10,bpm=fast?176:128,step=beat%32;
