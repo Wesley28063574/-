@@ -15,7 +15,7 @@
    await ActivityStore.put(pending.record);
    localStorage.setItem('lanstar-active-event-'+age,pending.record.id);
    status.textContent='活動已建立，正在進入遊戲…';
-   const target=new URL('game.html',document.baseURI);target.searchParams.set('age',age);target.searchParams.set('activity',pending.record.id);target.searchParams.set('v','elementary-choice-1');location.assign(target.href);
+   const target=new URL('game.html',document.baseURI);target.searchParams.set('age',age);target.searchParams.set('activity',pending.record.id);target.searchParams.set('v','pictures-only-final');location.assign(target.href);
   }catch(error){status.textContent='活動尚未開始：無法保存本機紀錄，請確認瀏覽器儲存空間與權限後再試一次。';console.error(error);busy=false;buttons.forEach(button=>{button.disabled=false;button.removeAttribute('aria-disabled')})}
  });
 })();
